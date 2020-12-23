@@ -1,0 +1,4 @@
+node_modules/
+.eslintcache
+robots.txt
+.env
