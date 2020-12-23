@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import numberService  from "./services/persons"
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -18,9 +18,13 @@ const App = () => {
 			  );
 
 	useEffect(() => {
-		axios.get("http://localhost:3001/persons").then((response) => {
-			setPersons(response.data);
-		});
+		numberService.getAll()
+		.then(initialNumbers => (
+			setPersons(initialNumbers)
+		))
+		.catch(() => {
+			window.alert('Failed to fetch the phonebook')
+		})
 	}, []);
 
 	const handleNameChange = (event) => {
@@ -38,17 +42,51 @@ const App = () => {
 	const addPerson = (event) => {
 		event.preventDefault();
 		const names = persons.map((person) => person.name);
+		const newPerson = {
+			name: newName,
+			number: newNumber,
+		}
+
 		if (names.includes(newName)) {
-			const alert = `${newName} is already added to phonebook`;
-			window.alert(alert);
+			const alert = `${newName} is already added to the phonebook. Replace the old number with the new one?`;
+			if(window.confirm(alert)){
+				const id = persons.find((person) => person.name === newName).id
+				numberService.update(id, newPerson)
+					.then((response) => {
+						setPersons(persons.map(person => person.id !== id ? person : response))
+					})
+					.catch(() => {
+						window.alert('Failed to update the number')
+					})
+			};
 		} else {
-			const newPersons = persons.concat({
-				name: newName,
-				number: newNumber,
-			});
-			setPersons(newPersons);
+			numberService.create(newPerson)
+      			.then(response => {
+       				setPersons(persons.concat(response))
+					setNewName('')
+					setNewNumber('')
+				})
+				.catch(() => {
+					window.alert('Failed to create a new person')
+				})
+				  
 		}
 	};
+
+	const deletePerson = id => {
+		const deletedName = persons.find((person) => person.id === id).name
+		if(window.confirm(`Do you really want to delete ${deletedName} from the phonebook?`)) {
+			numberService.deleteId(id)
+			.then((response) => {
+				const deletedId = response.config.params.id
+				const newPersons = persons.filter((person) => person.id !== deletedId)
+				setPersons(newPersons)
+			})
+			.catch(() => {
+				window.alert(`Failed to delete ${deletedName} from the phonebook.`)
+			})
+		}
+	}
 
 	return (
 		<div>
@@ -63,7 +101,7 @@ const App = () => {
 				handleNumberChange={handleNumberChange}
 			/>
 			<h3>Numbers</h3>
-			<Persons persons={personsShown} />
+			<Persons persons={personsShown} handleDelete={deletePerson} />
 		</div>
 	);
 };
