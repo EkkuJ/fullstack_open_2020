@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import numberService  from "./services/persons"
+import Notification from "./components/Notification";
+import numberService from "./services/persons";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [filter, setFilter] = useState("");
+	const [notification, setNotification] = useState(null);
+	const [success, setSuccess] = useState(false);
 
 	const personsShown =
 		filter === ""
@@ -16,16 +19,27 @@ const App = () => {
 			: persons.filter((person) =>
 					person.name.toLowerCase().includes(filter.toLowerCase())
 			  );
+	const refreshNumbers = () => {
+		numberService
+			.getAll()
+			.then((initialNumbers) => setPersons(initialNumbers))
+			.catch(() => {
+				setSuccess(false);
+				showNotification(`Failed to get the numbers from the server`);
+			});
+	};
 
 	useEffect(() => {
-		numberService.getAll()
-		.then(initialNumbers => (
-			setPersons(initialNumbers)
-		))
-		.catch(() => {
-			window.alert('Failed to fetch the phonebook')
-		})
+		refreshNumbers();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	const showNotification = (notification) => {
+		setNotification(notification);
+		setTimeout(() => {
+			setNotification(null);
+		}, 3000);
+	};
 
 	const handleNameChange = (event) => {
 		setNewName(event.target.value);
@@ -45,48 +59,79 @@ const App = () => {
 		const newPerson = {
 			name: newName,
 			number: newNumber,
-		}
+		};
 
 		if (names.includes(newName)) {
 			const alert = `${newName} is already added to the phonebook. Replace the old number with the new one?`;
-			if(window.confirm(alert)){
-				const id = persons.find((person) => person.name === newName).id
-				numberService.update(id, newPerson)
+			if (window.confirm(alert)) {
+				const id = persons.find((person) => person.name === newName).id;
+				numberService
+					.update(id, newPerson)
 					.then((response) => {
-						setPersons(persons.map(person => person.id !== id ? person : response))
+						setPersons(
+							persons.map((person) =>
+								person.id !== id ? person : response
+							)
+						);
+						setSuccess(true);
+						showNotification(
+							`Successfully updated the number of ${newName}`
+						);
 					})
 					.catch(() => {
-						window.alert('Failed to update the number')
-					})
-			};
+						setSuccess(false);
+						showNotification(
+							`Number of ${newName} has already been removed from the phonebook.`
+						);
+						refreshNumbers();
+					});
+			}
 		} else {
-			numberService.create(newPerson)
-      			.then(response => {
-       				setPersons(persons.concat(response))
-					setNewName('')
-					setNewNumber('')
+			numberService
+				.create(newPerson)
+				.then((response) => {
+					setPersons(persons.concat(response));
+					setNewName("");
+					setNewNumber("");
+					setSuccess(true);
+					showNotification(
+						`Successfully added ${newName} to the phonebook`
+					);
 				})
 				.catch(() => {
-					window.alert('Failed to create a new person')
-				})
-				  
+					setSuccess(false);
+					showNotification(
+						`Number of ${newName} has already been removed from the phonebook.`
+					);
+					refreshNumbers();
+				});
 		}
 	};
 
-	const deletePerson = id => {
-		const deletedName = persons.find((person) => person.id === id).name
-		if(window.confirm(`Do you really want to delete ${deletedName} from the phonebook?`)) {
-			numberService.deleteId(id)
-			.then((response) => {
-				const deletedId = response.config.params.id
-				const newPersons = persons.filter((person) => person.id !== deletedId)
-				setPersons(newPersons)
-			})
-			.catch(() => {
-				window.alert(`Failed to delete ${deletedName} from the phonebook.`)
-			})
+	const deletePerson = (id) => {
+		const deletedName = persons.find((person) => person.id === id).name;
+		if (
+			window.confirm(
+				`Do you really want to delete ${deletedName} from the phonebook?`
+			)
+		) {
+			numberService
+				.deleteId(id)
+				.then((response) => {
+					const deletedId = response.config.params.id;
+					const newPersons = persons.filter(
+						(person) => person.id !== deletedId
+					);
+					setPersons(newPersons);
+				})
+				.catch(() => {
+					setSuccess(false);
+					showNotification(
+						`Number of ${newName} has already been removed from the phonebook.`
+					);
+				});
 		}
-	}
+	};
 
 	return (
 		<div>
@@ -101,6 +146,7 @@ const App = () => {
 				handleNumberChange={handleNumberChange}
 			/>
 			<h3>Numbers</h3>
+			<Notification success={success} message={notification} />
 			<Persons persons={personsShown} handleDelete={deletePerson} />
 		</div>
 	);
