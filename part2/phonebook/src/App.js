@@ -78,11 +78,9 @@ const App = () => {
 							`Successfully updated the number of ${newName}`
 						);
 					})
-					.catch(() => {
+					.catch((error) => {
 						setSuccess(false);
-						showNotification(
-							`Number of ${newName} has already been removed from the phonebook.`
-						);
+						showNotification(error.response.data.error);
 						refreshNumbers();
 					});
 			}
@@ -98,11 +96,9 @@ const App = () => {
 						`Successfully added ${newName} to the phonebook`
 					);
 				})
-				.catch(() => {
+				.catch((error) => {
 					setSuccess(false);
-					showNotification(
-						`Number of ${newName} has already been removed from the phonebook.`
-					);
+					showNotification(error.response.data.error);
 					refreshNumbers();
 				});
 		}
@@ -124,11 +120,9 @@ const App = () => {
 					);
 					setPersons(newPersons);
 				})
-				.catch(() => {
+				.catch((error) => {
 					setSuccess(false);
-					showNotification(
-						`Number of ${newName} has already been removed from the phonebook.`
-					);
+					showNotification(error.response.data.error);
 				});
 		}
 	};
