@@ -31,12 +31,12 @@ const mostLikes = (blogs) => {
   const likes = _(blogs)
     .groupBy('author')
     .map((group, author) => ({
-        author: author,
-        likes: _.sumBy(group, 'likes')
+      author: author,
+      likes: _.sumBy(group, 'likes')
     }))
     .value()
 
-    const res = _.maxBy(likes, 'likes')
+  const res = _.maxBy(likes, 'likes')
 
   if (res) {
     return { author: res.author, likes: res.likes }

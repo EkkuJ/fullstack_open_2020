@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVra3Vqb2tpbmVuIiwiaWQiOiI1ZmYzMDQ0NzNkOGQ2MzFiNDQ0OGM5NjQiLCJpYXQiOjE2MDk3NjIxMTF9.svrF9HJUl6BRz0bNqjb7CQgxM5WguYDGUeaEx3z6C1M
+
+{
+    "title": "Using Node.js with Ekku",
+    "author": "EkkuJ",
+    "url": "https://ekkujokinen.com",
+    "likes": 0
+}
