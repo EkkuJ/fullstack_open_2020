@@ -57,11 +57,11 @@ const App = () => {
     }
   }
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.removeItem('blog-list-logged-user')
     setUser(null)
     setSuccess(true)
-    showNotification(`Successfully logged out`)
+    showNotification('Successfully logged out')
   }
 
   const handleBlogPost = (blogObject) => {
@@ -82,7 +82,7 @@ const App = () => {
 
   const handleRemove = (blog) => {
     try {
-      blogService.deleteBlog(blog.id).then((response) => {
+      blogService.deleteBlog(blog.id).then(() => {
         setBlogs(blogs.filter((b) => b.id !== blog.id))
         setSuccess(false)
         showNotification(`Removed ${blog.title} by ${blog.author}`)
