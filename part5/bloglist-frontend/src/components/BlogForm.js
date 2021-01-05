@@ -7,22 +7,22 @@ const BlogForm = ({ handleBlogPost }) => {
   const [url, setUrl] = useState('')
 
   const handleSubmit = () => {
-    const blogPost =
-      {
-        title: title,
-        author: author,
-        url: url
-      }
+    const blogPost = {
+      title: title,
+      author: author,
+      url: url,
+    }
     handleBlogPost(blogPost)
   }
 
   return (
     <div>
       <h3>Post a blog</h3>
-      <form onSubmit={handleSubmit}>
+      <form id="blog-form" onSubmit={handleSubmit}>
         <div>
           title:{' '}
           <input
+            id="input-title"
             type="text"
             value={title}
             name="title"
@@ -32,6 +32,7 @@ const BlogForm = ({ handleBlogPost }) => {
         <div>
           author:{' '}
           <input
+            id="input-author"
             type="text"
             value={author}
             name="author"
@@ -41,6 +42,7 @@ const BlogForm = ({ handleBlogPost }) => {
         <div>
           url:{' '}
           <input
+            id="input-url"
             type="text"
             value={url}
             name="url"
@@ -54,7 +56,7 @@ const BlogForm = ({ handleBlogPost }) => {
 }
 
 BlogForm.propTypes = {
-  handleBlogPost: PropTypes.func.isRequired
+  handleBlogPost: PropTypes.func.isRequired,
 }
 
 export default BlogForm
