@@ -93,6 +93,10 @@ const App = () => {
     }
   }
 
+  const handleLike = (id, likeBlog) => {
+    blogService.likeBlog(id, likeBlog)
+  }
+
   const showNotification = (notification) => {
     setNotification(notification)
     setTimeout(() => {
@@ -127,7 +131,7 @@ const App = () => {
         <BlogForm handleBlogPost={handleBlogPost} />
       </Togglable>
       <Notification success={success} message={notification} />
-      <BlogList blogs={blogs} handleRemove={handleRemove} user={user}/>
+      <BlogList blogs={blogs} handleRemove={handleRemove} user={user} handleLike={handleLike}/>
     </div>
   )
 }
