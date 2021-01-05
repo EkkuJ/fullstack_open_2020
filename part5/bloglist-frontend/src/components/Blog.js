@@ -37,7 +37,7 @@ const Blog = ({ blog, handleRemove, user, handleLike }) => {
             User: {blog.user.name}{' '}
             <span className="small-grey">@{blog.user.username}</span>
           </li>
-          {canRemove && <button onClick={handleRemoveClick}>Remove</button>}
+          {canRemove && <button id="remove-button" onClick={handleRemoveClick}>Remove</button>}
         </ul>
       </div>
     )
