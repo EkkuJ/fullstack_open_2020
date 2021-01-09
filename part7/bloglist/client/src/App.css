@@ -1,0 +1,42 @@
+.error {
+  background: rgb(253, 219, 219);
+  font-size: 15px;
+  border-style: solid;
+  border-color: maroon;
+  border-width: 1px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.success {
+  background: rgb(223, 253, 219);
+  font-size: 15px;
+  border-style: solid;
+  border-color:mediumseagreen;
+  border-width: 1px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.blog {
+  margin: 1em;
+}
+
+.blog-title {
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+}
+
+.small-grey {
+  font-size: small;
+  font-style: italic;
+  color: rgb(119, 119, 119);
+}
+
+.detail-button {
+  margin-left: 1em;
+}
+
+.blog ul li {
+  margin-bottom: 1em; 
+}

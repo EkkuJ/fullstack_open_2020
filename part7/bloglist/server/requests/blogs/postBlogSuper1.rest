@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVydXNlciIsImlkIjoiNWZmNDRkNmI5NTE3ZGM0YjAwOTIzODgzIiwiaWF0IjoxNjA5ODQ2MjAwfQ.m6Xt0qvd9y0grHAx0huh9axdkOYMlJgJxBzA9im_rR8
+
+{
+    "title": "Authenticating with superuser",
+    "author": "Super22",
+    "url": "https://testing.com",
+    "likes": 0
+}
